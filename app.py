@@ -85,6 +85,35 @@ class HelmetData(Resource):
         return {"message": "helmet {} data deleted.".format(helmet_id)}
 
 
+class LatestDataList(Resource):
+    def get(self):
+        data = DataModel.objects()
+        helmet_ids = set(map(lambda d: d.helmet_id, data))
+
+        data = []
+        for helmet_id in helmet_ids:
+            d = DataModel.objects(
+                helmet_id=helmet_id
+            ).order_by('-datetime').first()
+            data.append(d)
+
+        data = data_schema.dump(data, many=True)
+        return data
+
+
+class LatestHelmetData(Resource):
+    def get(self, helmet_id):
+        data = DataModel.objects(
+            helmet_id=helmet_id
+        ).order_by('-datetime').first()
+
+        if data is None:
+            abort(404, message="no data for helmet {}.".format(helmet_id))
+
+        data = data_schema.dump(data)
+        return data
+
+
 class Ping(Resource):
     def post(self):
         return {'ping': 'pong'}
@@ -93,6 +122,8 @@ class Ping(Resource):
 api.add_resource(Ping, '/ping')
 api.add_resource(DataList, '/data')
 api.add_resource(HelmetData, '/data/<string:helmet_id>')
+api.add_resource(LatestDataList, '/latest-data')
+api.add_resource(LatestHelmetData, '/latest-data/<string:helmet_id>')
 
 
 if __name__ == '__main__':
