@@ -18,21 +18,21 @@ db.init_app(app)
 class DataModel(db.Document):
     helmet_id = db.IntField(required=True)
     datetime = db.DateTimeField(default=datetime.datetime.utcnow)
-    removal_sensor = db.BooleanField(required=True)
-    collision_sensor = db.IntField(required=True)
+    is_removed = db.BooleanField(required=True)
+    collision = db.IntField(required=True)
     # air_quality_sensor = db.IntField(required=True)
-    temperature_sensor = db.IntField(required=True)
-    humidity_sensor = db.IntField(required=True)
+    temperature = db.IntField(required=True)
+    humidity = db.IntField(required=True)
 
 
 class DataSchema(Schema):
     helmet_id = fields.Int(required=True)
     datetime = fields.DateTime(dump_only=True)
-    removal_sensor = fields.Bool(required=True)
-    collision_sensor = fields.Int(required=True)
+    is_removed = fields.Bool(required=True)
+    collision = fields.Int(required=True)
     # air_quality_sensor = fields.Int(required=True)
-    temperature_sensor = fields.Int(required=True)
-    humidity_sensor = fields.Int(required=True)
+    temperature = fields.Int(required=True)
+    humidity = fields.Int(required=True)
 
 
 data_schema = DataSchema()
@@ -65,10 +65,10 @@ class HelmetData(Resource):
 
         data = DataModel(
             helmet_id=data['helmet_id'],
-            removal_sensor=data['removal_sensor'],
-            collision_sensor=data['collision_sensor'],
-            temperature_sensor=data['temperature_sensor'],
-            humidity_sensor=data['humidity_sensor'],
+            is_removed=data['is_removed'],
+            collision=data['collision'],
+            temperature=data['temperature'],
+            humidity=data['humidity'],
         )
         data.save()
         message = "Successfully created data for helmet {}.".format(
