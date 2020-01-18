@@ -3,10 +3,12 @@ import datetime
 from flask import Flask, request
 from flask_restful import Api, Resource, abort
 from flask_mongoengine import MongoEngine
+from flask_cors import CORS
 from marshmallow import Schema, fields, ValidationError
 
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 db = MongoEngine()
